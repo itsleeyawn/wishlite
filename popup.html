@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <style>
+      /* Aesthetic: design variation 2a — "Atelier masonry". Warm cream paper,
+         serif wordmark, image-only masonry tiles, categories bleeding under a fade. */
+      :root { color-scheme: light; }
+      body {
+        width: 340px;
+        margin: 0;
+        background: #f6f3ec;
+        color: #1c1712;
+        font: 13px "Helvetica Neue", Helvetica, Arial, sans-serif;
+      }
+      header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 14px;
+        padding: 16px 16px 12px;
+      }
+      h1 {
+        margin: 0;
+        font: 500 24px/1 "Newsreader", Georgia, "Times New Roman", serif;
+        letter-spacing: 0.005em;
+      }
+      #add {
+        display: flex;
+        align-items: center;
+        gap: 6px;
+        border: none;
+        background: transparent;
+        color: #1c1712;
+        font: 600 12.5px "Helvetica Neue", Helvetica, Arial, sans-serif;
+        cursor: pointer;
+        padding: 0;
+      }
+      #add svg { width: 12px; height: 12px; }
+
+      .actions { display: flex; align-items: center; gap: 13px; }
+      /* Collapsible search pill (design 2a) */
+      .search {
+        display: flex;
+        align-items: center;
+        gap: 6px;
+        height: 34px;
+        box-sizing: border-box;
+        padding: 0 6px 0 9px;
+        border: 1px solid #e2dccf;
+        background: #fdfcf9;
+        border-radius: 999px;
+        box-shadow: 0 2px 12px rgba(28, 23, 18, 0.06);
+        overflow: hidden;
+        width: 34px;
+        transition: width 0.18s ease;
+      }
+      .search.open { width: 186px; }
+      .search-btn {
+        flex: none;
+        background: transparent;
+        border: none;
+        color: #5f574c;
+        cursor: pointer;
+        padding: 0;
+        display: grid;
+        place-items: center;
+      }
+      .search-btn svg { width: 16px; height: 16px; }
+      #search-input {
+        flex: 1;
+        min-width: 0;
+        border: none;
+        background: transparent;
+        color: #1c1712;
+        font: 13px "Helvetica Neue", Helvetica, Arial, sans-serif;
+        outline: none;
+        padding: 0;
+      }
+      .search-x {
+        flex: none;
+        background: transparent;
+        border: none;
+        color: #a89f8f;
+        cursor: pointer;
+        padding: 2px;
+        font-size: 15px;
+        line-height: 1;
+        display: grid;
+        place-items: center;
+      }
+      .search:not(.open) #search-input,
+      .search:not(.open) .search-x { display: none; }
+
+      .tabs-wrap { position: relative; padding: 0 0 12px 16px; }
+      #tabs {
+        display: flex;
+        gap: 6px;
+        overflow-x: auto;
+        scrollbar-width: none;
+        padding-right: 56px;
+      }
+      #tabs::-webkit-scrollbar { display: none; }
+      /* categories bleed under the right edge */
+      .tabs-wrap::after {
+        content: "";
+        position: absolute;
+        top: 0; right: 0; bottom: 12px;
+        width: 52px;
+        pointer-events: none;
+        background: linear-gradient(90deg, rgba(246, 243, 236, 0) 0%, #f6f3ec 72%);
+      }
+      .tab {
+        flex: none;
+        border: none;
+        border-radius: 999px;
+        padding: 6px 13px;
+        font: 500 12px "Helvetica Neue", Helvetica, Arial, sans-serif;
+        cursor: pointer;
+        white-space: nowrap;
+        background: transparent;
+        color: #8b8375;
+      }
+      .tab.on { background: #1c1712; color: #f6f3ec; }
+      .tab.drop { outline: 2px solid #1c1712; outline-offset: 1px; }
+      .tab.new { color: #8b8375; border: 1px dashed #c9beaa; padding: 5px 12px; }
+      input.tab {
+        width: 104px;
+        box-sizing: border-box;
+        background: #fdfcf9;
+        color: #1c1712;
+        border: 1px solid #1c1712;
+        outline: none;
+      }
+      .tab .x { margin-left: 6px; opacity: 0.55; }
+      .tab .x:hover { opacity: 1; }
+
+      #grid {
+        columns: 2;
+        column-gap: 10px;
+        padding: 0 16px 16px;
+      }
+      .tile {
+        position: relative;
+        display: block;
+        break-inside: avoid;
+        margin-bottom: 10px;
+        border-radius: 7px;
+        overflow: hidden;
+        background: #eceae3;
+        border: 1px solid #e6dfd1;
+        cursor: pointer;
+        text-decoration: none;
+        color: #1c1712;
+      }
+      .tile img { display: block; width: 100%; height: auto; }
+      .tile .label {
+        display: block;
+        padding: 16px 12px;
+        font-size: 12px;
+        text-align: center;
+        overflow-wrap: anywhere;
+      }
+      .del {
+        position: absolute;
+        top: 7px;
+        right: 7px;
+        width: 23px;
+        height: 23px;
+        border-radius: 7px;
+        background: rgba(28, 23, 18, 0.7);
+        color: #f6f3ec;
+        display: none;
+        align-items: center;
+        justify-content: center;
+        font-size: 13px;
+        line-height: 1;
+        backdrop-filter: blur(4px);
+      }
+      .tile:hover .del { display: flex; }
+      #empty { padding: 28px 16px; text-align: center; color: #8b8375; }
+    </style>
+  </head>
+  <body>
+    <header>
+      <h1>Wishlite</h1>
+      <div class="actions">
+        <div class="search" id="search">
+          <button id="search-toggle" class="search-btn" title="Search">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+              <circle cx="11" cy="11" r="7" /><line x1="16.5" y1="16.5" x2="21" y2="21" />
+            </svg>
+          </button>
+          <input id="search-input" placeholder="Search" />
+          <button id="search-cancel" class="search-x" title="Cancel">×</button>
+        </div>
+        <button id="add">
+          <svg viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.2" fill="none">
+            <line x1="12" y1="5" x2="12" y2="19" /><line x1="5" y1="12" x2="19" y2="12" />
+          </svg>Add page
+        </button>
+      </div>
+    </header>
+    <div class="tabs-wrap"><nav id="tabs"></nav></div>
+    <div id="grid"></div>
+    <p id="empty" hidden>Nothing here yet.</p>
+    <script src="categorize.js"></script>
+    <script src="popup.js"></script>
+  </body>
+</html>
