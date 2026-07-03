@@ -64,7 +64,9 @@ function render() {
     }
     const del = document.createElement("span");
     del.className = "del";
-    del.textContent = "×";
+    del.innerHTML =
+      '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2">' +
+      '<line x1="6" y1="6" x2="18" y2="18"/><line x1="18" y1="6" x2="6" y2="18"/></svg>';
     del.onclick = async (e) => {
       e.preventDefault();
       items = items.filter((i) => i !== item);
@@ -168,8 +170,12 @@ document.getElementById("search-toggle").onclick = () => {
   searchInput.focus();
 };
 searchInput.oninput = () => { query = searchInput.value; render(); };
-searchInput.onkeydown = (e) => { if (e.key === "Escape") closeSearch(); };
+searchInput.onkeydown = (e) => { if (e.key === "Escape" || e.key === "Enter") closeSearch(); };
 document.getElementById("search-cancel").onclick = closeSearch;
+// close when clicking anywhere outside the pill
+document.addEventListener("click", (e) => {
+  if (search.classList.contains("open") && !search.contains(e.target)) closeSearch();
+});
 function closeSearch() {
   search.classList.remove("open");
   searchInput.value = query = "";
