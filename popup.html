@@ -12,6 +12,8 @@
         background: #f6f3ec;
         color: #1c1712;
         font: 13px "Helvetica Neue", Helvetica, Arial, sans-serif;
+        -webkit-font-smoothing: antialiased;
+        -moz-osx-font-smoothing: grayscale;
       }
       header {
         display: flex;
@@ -35,7 +37,10 @@
         font: 600 12.5px "Helvetica Neue", Helvetica, Arial, sans-serif;
         cursor: pointer;
         padding: 0;
+        transition-property: transform;
+        transition-duration: 0.1s;
       }
+      #add:active { transform: scale(0.96); }
       #add svg { width: 12px; height: 12px; }
 
       .actions { display: flex; align-items: center; gap: 13px; }
@@ -65,7 +70,10 @@
         padding: 0;
         display: grid;
         place-items: center;
+        transition-property: transform;
+        transition-duration: 0.1s;
       }
+      .search-btn:active { transform: scale(0.96); }
       .search-btn svg { width: 16px; height: 16px; }
       #search-input {
         flex: 1;
@@ -120,7 +128,10 @@
         white-space: nowrap;
         background: transparent;
         color: #8b8375;
+        transition-property: transform;
+        transition-duration: 0.1s;
       }
+      .tab:active { transform: scale(0.96); }
       .tab.on { background: #1c1712; color: #f6f3ec; }
       .tab.drop { outline: 2px solid #1c1712; outline-offset: 1px; }
       .tab.new { color: #8b8375; border: 1px dashed #c9beaa; padding: 5px 12px; }
@@ -148,11 +159,15 @@
         border-radius: 7px;
         overflow: hidden;
         background: #eceae3;
-        border: 1px solid #e6dfd1;
+        /* inset shadow respects border-radius; pure black so image edges read clean, not tinted */
+        box-shadow: inset 0 0 0 1px rgba(0, 0, 0, 0.1);
         cursor: pointer;
         text-decoration: none;
         color: #1c1712;
+        transition-property: transform;
+        transition-duration: 0.1s;
       }
+      .tile:active { transform: scale(0.96); }
       .tile img { display: block; width: 100%; height: auto; }
       .tile .label {
         display: block;
@@ -160,6 +175,7 @@
         font-size: 12px;
         text-align: center;
         overflow-wrap: anywhere;
+        text-wrap: pretty;
       }
       .del {
         position: absolute;
