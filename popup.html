@@ -5,12 +5,42 @@
     <style>
       /* Aesthetic: design variation 2a — "Atelier masonry". Warm cream paper,
          serif wordmark, image-only masonry tiles, categories bleeding under a fade. */
-      :root { color-scheme: light; }
+      :root {
+        color-scheme: light dark;
+        --bg: #f6f3ec;
+        --bg-rgb: 246, 243, 236; /* for the fade gradient */
+        --text: #1c1712;
+        --text-rgb: 28, 23, 18; /* for subtle shadows */
+        --muted: #8b8375;
+        --muted-strong: #5f574c;
+        --muted-faint: #a89f8f;
+        --surface: #fdfcf9;
+        --tile-bg: #eceae3;
+        --border: #e2dccf;
+        --border-dashed: #c9beaa;
+        --img-outline: rgba(0, 0, 0, 0.1); /* pure black in light mode */
+      }
+      @media (prefers-color-scheme: dark) {
+        :root {
+          --bg: #17140f; /* warm near-black paper */
+          --bg-rgb: 23, 20, 15;
+          --text: #f0ebe0;
+          --text-rgb: 240, 235, 224;
+          --muted: #8a8172;
+          --muted-strong: #b3a996;
+          --muted-faint: #7d7565;
+          --surface: #221e18;
+          --tile-bg: #221e18;
+          --border: #342f26;
+          --border-dashed: #47402f;
+          --img-outline: rgba(255, 255, 255, 0.1); /* pure white in dark mode */
+        }
+      }
       body {
         width: 340px;
         margin: 0;
-        background: #f6f3ec;
-        color: #1c1712;
+        background: var(--bg);
+        color: var(--text);
         font: 13px "Helvetica Neue", Helvetica, Arial, sans-serif;
         -webkit-font-smoothing: antialiased;
         -moz-osx-font-smoothing: grayscale;
@@ -33,7 +63,7 @@
         gap: 6px;
         border: none;
         background: transparent;
-        color: #1c1712;
+        color: var(--text);
         font: 600 12.5px "Helvetica Neue", Helvetica, Arial, sans-serif;
         cursor: pointer;
         padding: 0;
@@ -52,10 +82,10 @@
         height: 34px;
         box-sizing: border-box;
         padding: 0 6px 0 9px;
-        border: 1px solid #e2dccf;
-        background: #fdfcf9;
+        border: 1px solid var(--border);
+        background: var(--surface);
         border-radius: 999px;
-        box-shadow: 0 2px 12px rgba(28, 23, 18, 0.06);
+        box-shadow: 0 2px 12px rgba(var(--text-rgb), 0.06);
         overflow: hidden;
         width: 34px;
         transition: width 0.18s ease;
@@ -68,7 +98,7 @@
         flex: none;
         background: transparent;
         border: none;
-        color: #5f574c;
+        color: var(--text);
         cursor: pointer;
         /* fill the pill height and widen the tap target (pill is 34px tall) */
         height: 34px;
@@ -82,12 +112,17 @@
       }
       .search-btn:active { transform: scale(0.96); }
       .search-btn svg { width: 16px; height: 16px; }
+      @media (prefers-color-scheme: dark) {
+        .search { background: var(--text); }        /* --text is cream in dark mode */
+        .search-btn, #search-input { color: var(--bg); }  /* --bg is near-black in dark mode */
+        .search-x { color: var(--muted); }
+      }
       #search-input {
         flex: 1;
         min-width: 0;
         border: none;
         background: transparent;
-        color: #1c1712;
+        color: var(--text);
         font: 13px "Helvetica Neue", Helvetica, Arial, sans-serif;
         outline: none;
         padding: 0;
@@ -96,7 +131,7 @@
         flex: none;
         background: transparent;
         border: none;
-        color: #a89f8f;
+        color: var(--muted-faint);
         cursor: pointer;
         /* fill the pill height and widen the tap target */
         height: 34px;
@@ -126,7 +161,7 @@
         top: 0; right: 0; bottom: 12px;
         width: 52px;
         pointer-events: none;
-        background: linear-gradient(90deg, rgba(246, 243, 236, 0) 0%, #f6f3ec 72%);
+        background: linear-gradient(90deg, rgba(var(--bg-rgb), 0) 0%, var(--bg) 72%);
       }
       .tab {
         flex: none;
@@ -137,20 +172,20 @@
         cursor: pointer;
         white-space: nowrap;
         background: transparent;
-        color: #8b8375;
+        color: var(--muted);
         transition-property: transform;
         transition-duration: 0.1s;
       }
       .tab:active { transform: scale(0.96); }
-      .tab.on { background: #1c1712; color: #f6f3ec; }
-      .tab.drop { outline: 2px solid #1c1712; outline-offset: 1px; }
-      .tab.new { color: #8b8375; border: 1px dashed #c9beaa; padding: 5px 12px; }
+      .tab.on { background: var(--text); color: var(--bg); }
+      .tab.drop { outline: 2px solid var(--text); outline-offset: 1px; }
+      .tab.new { color: var(--muted); border: 1px dashed var(--border-dashed); padding: 5px 12px; }
       input.tab {
         width: 104px;
         box-sizing: border-box;
-        background: #fdfcf9;
-        color: #1c1712;
-        border: 1px solid #1c1712;
+        background: var(--surface);
+        color: var(--text);
+        border: 1px solid var(--text);
         outline: none;
       }
       .tab .x { margin-left: 6px; opacity: 0.55; }
@@ -168,12 +203,12 @@
         margin-bottom: 10px;
         border-radius: 7px;
         overflow: hidden;
-        background: #eceae3;
-        /* inset shadow respects border-radius; pure black so image edges read clean, not tinted */
-        box-shadow: inset 0 0 0 1px rgba(0, 0, 0, 0.1);
+        background: var(--tile-bg);
+        /* inset shadow respects border-radius; pure black (light) / pure white (dark) so image edges read clean, not tinted */
+        box-shadow: inset 0 0 0 1px var(--img-outline);
         cursor: pointer;
         text-decoration: none;
-        color: #1c1712;
+        color: var(--text);
         transition-property: transform;
         transition-duration: 0.1s;
       }
@@ -194,8 +229,8 @@
         width: 23px;
         height: 23px;
         border-radius: 7px;
-        background: rgba(28, 23, 18, 0.7);
-        color: #f6f3ec;
+        background: rgba(var(--text-rgb), 0.7);
+        color: var(--bg);
         display: none;
         align-items: center;
         justify-content: center;
@@ -203,7 +238,7 @@
       }
       .del svg { width: 12px; height: 12px; }
       .tile:hover .del { display: flex; }
-      #empty { padding: 28px 16px; text-align: center; color: #8b8375; }
+      #empty { padding: 28px 16px; text-align: center; color: var(--muted); }
     </style>
   </head>
   <body>
@@ -212,13 +247,13 @@
       <div class="actions">
         <div class="search" id="search">
           <button id="search-toggle" class="search-btn" title="Search">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4">
               <circle cx="11" cy="11" r="7" /><line x1="16.5" y1="16.5" x2="21" y2="21" />
             </svg>
           </button>
           <input id="search-input" placeholder="Search" />
           <button id="search-cancel" class="search-x" title="Cancel">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6">
             <line x1="6" y1="6" x2="18" y2="18" /><line x1="18" y1="6" x2="6" y2="18" />
           </svg>
         </button>
