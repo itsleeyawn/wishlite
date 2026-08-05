@@ -188,8 +188,15 @@
         border: 1px solid var(--text);
         outline: none;
       }
-      .tab .x { margin-left: 6px; opacity: 0.55; }
+      .tab .x {
+        display: inline-grid;
+        place-items: center;
+        vertical-align: -1px; /* optical centre against the 12px label */
+        margin-left: 6px;
+        opacity: 0.55;
+      }
       .tab .x:hover { opacity: 1; }
+      .tab .x svg { width: 9px; height: 9px; }
 
       #grid {
         columns: 2;
@@ -268,6 +275,11 @@
     <div class="tabs-wrap"><nav id="tabs"></nav></div>
     <div id="grid"></div>
     <p id="empty" hidden>Nothing here yet.</p>
+    <template id="x-icon">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6">
+        <line x1="6" y1="6" x2="18" y2="18" /><line x1="18" y1="6" x2="6" y2="18" />
+      </svg>
+    </template>
     <script src="categorize.js"></script>
     <script src="popup.js"></script>
   </body>

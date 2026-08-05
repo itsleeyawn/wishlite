@@ -11,4 +11,6 @@ assert.equal(categorize("Some random thing", "https://example.com/x"), "Other");
 assert.equal(categorize("My profile", "https://facebook.com/x"), "Other"); // no bare "book" keyword
 assert.equal(categorize("Some random thing", "https://example.com/x", { "example.com": "Vinyl" }), "Vinyl"); // learned override wins
 assert.equal(categorize("MacBook Pro 14 Laptop", "https://www.apple.com/x", { "www.apple.com": "Gifts" }), "Gifts"); // override beats keywords
+assert.equal(categorize("Gold earring set", "https://example.com/x"), "Jewelry");
+assert.equal(categorize("Elden Ring", "https://store.steampowered.com/x"), "Games"); // domain keyword inside a longer host
 console.log("ok");

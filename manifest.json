@@ -22,7 +22,10 @@
   },
   "browser_specific_settings": {
     "gecko": {
-      "id": "wishlite@leonletournel.dev"
+      "id": "wishlite@leonletournel.dev",
+      "data_collection_permissions": {
+        "required": ["none"]
+      }
     }
   }
 }

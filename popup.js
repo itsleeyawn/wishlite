@@ -1,9 +1,12 @@
-const DEFAULT_TABS = ["Tech", "Fashion", "Home", "Books", "Games", "Other"];
+const DEFAULT_TABS = ["Tech", "Fashion", "Jewelry", "Home", "Books", "Games", "Other"];
 let items = [];
 let customCats = [];
 let overrides = {}; // hostname -> category, learned when the user drags an item
 let active = "All";
 let query = "";
+
+// ponytail: cloned from a <template> instead of innerHTML, the AMO linter flags innerHTML
+const xIcon = () => document.getElementById("x-icon").content.cloneNode(true);
 
 const key = (item) => "item_" + item.id;
 const allCats = () => [...DEFAULT_TABS, ...customCats];
@@ -22,7 +25,7 @@ function render() {
     if (customCats.includes(t)) {
       const x = document.createElement("span");
       x.className = "x";
-      x.textContent = "×";
+      x.appendChild(xIcon());
       x.title = "Delete category (items move to Other)";
       x.onclick = (e) => { e.stopPropagation(); removeCategory(t); };
       b.appendChild(x);
@@ -64,9 +67,7 @@ function render() {
     }
     const del = document.createElement("span");
     del.className = "del";
-    del.innerHTML =
-      '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6">' +
-      '<line x1="6" y1="6" x2="18" y2="18"/><line x1="18" y1="6" x2="6" y2="18"/></svg>';
+    del.appendChild(xIcon());
     del.onclick = async (e) => {
       e.preventDefault();
       items = items.filter((i) => i !== item);
