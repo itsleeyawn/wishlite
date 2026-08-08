@@ -138,8 +138,31 @@ addBtn.onclick = async () => {
     const [res] = await chrome.scripting.executeScript({
       target: { tabId: tab.id },
       func: () => {
-        const meta = (sel) => document.querySelector(sel)?.content || "";
-        return meta('meta[property="og:image"]') || meta('meta[name="twitter:image"]');
+        // Reads <meta content>, <link href> or <img src>, whichever the selector hits.
+        const pick = (sel) => {
+          const el = document.querySelector(sel);
+          return (el && (el.content || el.src || el.href)) || "";
+        };
+        const src =
+          pick('meta[property="og:image"]') ||
+          // Shopify ships only the og:image sub-properties on some themes.
+          pick('meta[property="og:image:secure_url"]') ||
+          pick('meta[property="og:image:url"]') ||
+          pick('meta[name="twitter:image"]') ||
+          pick('link[rel="image_src"]') ||
+          // Amazon ships no OG tags at all. #landingImage is its product shot.
+          pick("#landingImage");
+        // Make relative and protocol-relative URLs absolute, the popup cannot resolve them.
+        if (src) return new URL(src, location.href).href;
+        // Last resort: the biggest near-square image in the first screenful. Product shots
+        // are square, so the ratio keeps out wide promo banners (a Visa-card ad won this
+        // contest once). ponytail: a guess. Add the site's own selector above when it loses.
+        const ratio = (i) => i.width / i.height;
+        return [...document.images]
+          .filter((i) => i.currentSrc && i.width >= 200 && i.height >= 200 &&
+            ratio(i) > 0.5 && ratio(i) < 2 &&
+            i.getBoundingClientRect().top + scrollY < innerHeight)
+          .sort((a, b) => b.width * b.height - a.width * a.height)[0]?.currentSrc || "";
       },
     });
     if (res?.result) image = res.result;
